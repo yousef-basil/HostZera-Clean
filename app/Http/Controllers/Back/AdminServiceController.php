@@ -58,7 +58,7 @@ class AdminServiceController extends Controller
 
         Service::create($data);
 
-        return redirect()->route('admin.services.index')->with('success', 'Service created successfully');
+        return redirect()->route('back.services.index')->with('success', 'Service created successfully');
     }
 
     /**
@@ -112,7 +112,7 @@ class AdminServiceController extends Controller
 
         $service->update($data);
 
-        return redirect()->route('admin.services.index')->with('success', 'Service updated successfully');
+        return redirect()->route('back.services.index')->with('success', 'Service updated successfully');
     }
 
     /**
@@ -123,6 +123,6 @@ class AdminServiceController extends Controller
         $service = Service::findOrFail($id);
         $service->delete();
 
-        return redirect()->route('admin.services.index')->with('success', 'Service deleted successfully');
+        return redirect()->route('back.services.index')->with('success', 'Service deleted successfully');
     }
 }

@@ -57,7 +57,7 @@ class CategoryManagementController extends Controller
             'icon_image'       => $iconImagePath,
         ]);
 
-        return redirect()->route('admin.categories.index')
+        return redirect()->route('back.categories.index')
             ->with('success', 'Category created successfully.');
     }
 
@@ -100,7 +100,7 @@ class CategoryManagementController extends Controller
             'icon_image'       => $iconImagePath,
         ]);
 
-        return redirect()->route('admin.categories.index')
+        return redirect()->route('back.categories.index')
             ->with('success', 'Category updated successfully.');
     }
 
@@ -116,7 +116,7 @@ class CategoryManagementController extends Controller
 
         $category->delete();
 
-        return redirect()->route('admin.categories.index')
+        return redirect()->route('back.categories.index')
             ->with('success', 'Category deleted successfully.');
     }
 }

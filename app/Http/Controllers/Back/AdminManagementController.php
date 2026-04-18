@@ -44,7 +44,7 @@ class AdminManagementController extends Controller
             'is_super_admin' => false, // New admins are regular admins by default
         ]);
 
-        return redirect()->route('admin.admins.index')
+        return redirect()->route('back.admins.index')
             ->with('success', 'Admin account created successfully.');
     }
 
@@ -78,7 +78,7 @@ class AdminManagementController extends Controller
 
         $admin->update($data);
 
-        return redirect()->route('admin.admins.index')
+        return redirect()->route('back.admins.index')
             ->with('success', 'Admin account updated successfully.');
     }
 
@@ -99,7 +99,7 @@ class AdminManagementController extends Controller
 
         $admin->delete();
 
-        return redirect()->route('admin.admins.index')
+        return redirect()->route('back.admins.index')
             ->with('success', 'Admin account deleted successfully.');
     }
 }
