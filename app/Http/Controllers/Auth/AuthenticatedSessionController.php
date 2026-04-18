@@ -39,10 +39,10 @@ class AuthenticatedSessionController extends Controller
         }
 
         if (Auth::guard('admin')->check()) {
-            return redirect()->intended(route('admin.dashboard'));
+            return redirect()->intended(route('back.admins.index'));
         }
 
-        return redirect()->intended(RouteServiceProvider::HOME);
+        return redirect()->intended(route('dashboard'));
     }
 
     /**

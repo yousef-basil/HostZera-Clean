@@ -41,22 +41,34 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        // Try standard user authentication
+        $email = $this->input('email');
+        $userExists = \App\Models\User::where('email', $email)->exists();
+        $adminExists = \App\Models\Admin::where('email', $email)->exists();
+
+        // 1. Check if user exists at all
+        if (!$userExists && !$adminExists) {
+            throw ValidationException::withMessages([
+                'email' => "It looks like you haven't created an account yet. Please register to get started.",
+            ]);
+        }
+
+        // 2. Try standard user authentication
         if (Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::clear($this->throttleKey());
             return;
         }
 
-        // Try admin authentication if user fails
+        // 3. Try admin authentication if user fails
         if (Auth::guard('admin')->attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::clear($this->throttleKey());
             return;
         }
 
+        // 4. If reached here, user exists but password is wrong
         RateLimiter::hit($this->throttleKey());
 
         throw ValidationException::withMessages([
-            'email' => trans('auth.failed'),
+            'email' => 'The password you entered is incorrect.',
         ]);
     }
 

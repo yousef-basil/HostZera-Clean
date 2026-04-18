@@ -31,7 +31,7 @@ class AdminAuthController extends Controller
 
         if (\Illuminate\Support\Facades\Auth::guard('admin')->attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->route('admin.dashboard');
+            return redirect()->route('back.admins.index');
         }
 
         return back()->withErrors([
@@ -49,6 +49,6 @@ class AdminAuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('admin.login');
+        return redirect()->route('back.login');
     }
 }

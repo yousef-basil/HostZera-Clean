@@ -6,7 +6,7 @@
 <style>
     .dashboard-wrapper {
         padding: 120px 0 80px;
-        background: #f9fafb;
+        background: #fdfbff;
         min-height: 100vh;
     }
     .db-container {
@@ -18,13 +18,15 @@
         margin-bottom: 40px;
     }
     .db-header h1 {
-        font-size: 2rem;
-        color: #111827;
+        font-size: 2.2rem;
+        color: #1e1b4b;
         font-weight: 800;
+        letter-spacing: -0.02em;
     }
     .db-header p {
-        color: #6b7280;
+        color: #6366f1;
         margin-top: 4px;
+        font-size: 1.1rem;
     }
     
     .stats-grid {
@@ -36,19 +38,25 @@
     .stat-card {
         background: white;
         padding: 24px;
-        border-radius: 16px;
-        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-        border: 1px solid #f3f4f6;
+        border-radius: 20px;
+        box-shadow: 0 10px 15px -3px rgba(139, 92, 246, 0.1);
+        border: 1px solid #ede9fe;
+        transition: transform 0.3s ease;
+    }
+    .stat-card:hover {
+        transform: translateY(-5px);
     }
     .stat-label {
-        font-size: 0.875rem;
-        color: #6b7280;
-        font-weight: 600;
+        font-size: 0.8rem;
+        color: #7c3aed;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
     }
     .stat-value {
-        font-size: 1.875rem;
-        color: #111827;
-        font-weight: 800;
+        font-size: 2rem;
+        color: #1e1b4b;
+        font-weight: 900;
         margin-top: 8px;
     }
     
@@ -59,76 +67,87 @@
     }
     .card-box {
         background: white;
-        border-radius: 16px;
-        border: 1px solid #f3f4f6;
-        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-        padding: 24px;
+        border-radius: 24px;
+        border: 1px solid #ede9fe;
+        box-shadow: 0 10px 15px -3px rgba(139, 92, 246, 0.05);
+        padding: 30px;
     }
     .card-title {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 20px;
-        font-size: 1.1rem;
-        font-weight: 700;
-        color: #111827;
+        margin-bottom: 25px;
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: #1e1b4b;
     }
     
     .service-item {
         display: flex;
         align-items: center;
-        padding: 16px;
-        border-radius: 12px;
-        background: #f9fafb;
+        padding: 20px;
+        border-radius: 16px;
+        background: #f5f3ff;
         margin-bottom: 12px;
+        border: 1px solid #ddd6fe;
     }
     .service-icon {
-        width: 48px;
-        height: 48px;
-        background: #eff6ff;
-        color: #2563eb;
-        border-radius: 10px;
+        width: 52px;
+        height: 52px;
+        background: #ede9fe;
+        color: #8b5cf6;
+        border-radius: 12px;
         display: flex;
         align-items: center;
         justify-content: center;
         margin-right: 16px;
     }
     .service-info h5 {
-        font-weight: 700;
+        font-weight: 800;
         margin-bottom: 2px;
+        color: #1e1b4b;
     }
     .service-info p {
-        font-size: 0.8rem;
-        color: #6b7280;
+        font-size: 0.85rem;
+        color: #6d6e71;
     }
     .status-badge {
         margin-left: auto;
-        padding: 4px 12px;
+        padding: 6px 14px;
         border-radius: 99px;
         font-size: 0.75rem;
-        font-weight: 700;
-        background: #dcfce7;
-        color: #166534;
+        font-weight: 800;
+        background: #8b5cf6;
+        color: white;
     }
 
     .action-btn {
         width: 100%;
-        padding: 12px;
-        background: #2563eb;
+        padding: 14px;
+        background: #8b5cf6;
         color: white;
         border: none;
-        border-radius: 10px;
-        font-weight: 700;
-        margin-bottom: 10px;
+        border-radius: 14px;
+        font-weight: 800;
+        margin-bottom: 12px;
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 8px;
+        gap: 10px;
+        transition: all 0.3s ease;
+    }
+    .action-btn:hover {
+        background: #7c3aed;
+        box-shadow: 0 10px 15px -3px rgba(124, 58, 237, 0.3);
     }
     .action-btn-secondary {
-        background: #f3f4f6;
-        color: #4b5563;
+        background: #f5f3ff;
+        color: #7c3aed;
+        border: 1px solid #ddd6fe;
+    }
+    .action-btn-secondary:hover {
+        background: #ede9fe;
     }
 
     @media (max-width: 960px) {
@@ -136,6 +155,7 @@
             grid-template-columns: 1fr;
         }
     }
+
 </style>
 @endpush
 

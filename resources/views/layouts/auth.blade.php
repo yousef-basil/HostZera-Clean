@@ -13,6 +13,9 @@
 
     {{-- Main Stylesheet --}}
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    
+    {{-- Lucide Icons --}}
+    <script src="https://unpkg.com/lucide@latest"></script>
 
     @stack('styles')
 </head>
@@ -21,6 +24,9 @@
         @yield('content')
     </div>
 
+    <script>
+      lucide.createIcons();
+    </script>
     @stack('scripts')
 </body>
 </html>

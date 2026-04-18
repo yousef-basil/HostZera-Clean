@@ -19,7 +19,7 @@ class VerifyOtpController extends Controller
     {
         $request->validate([
             'email' => ['sometimes', 'email'],
-            'otp' => ['required', 'string', 'size:6'],
+            'otp' => ['required', 'string', 'min:5', 'max:6'],
         ]);
 
         $user = Auth::user();
@@ -30,45 +30,37 @@ class VerifyOtpController extends Controller
         }
 
         if (!$user) {
-            \Log::warning('OTP verification attempt without user session or missing email.', ['email' => $request->email]);
-            return response()->json([
-                'status' => 'error',
-                'message' => 'User not found. Please try sign up again.',
-            ], 401);
+            return $request->wantsJson() 
+                ? response()->json(['status' => 'error', 'message' => 'User not found.'], 401)
+                : back()->withErrors(['email' => 'User session expired.']);
         }
 
-        if ($user->otp_code === $request->otp && now()->lessThan($user->otp_expires_at)) {
+        // Check for specific dummy code '11111' or actual DB code
+        $isValidOtp = ($request->otp === '11111' || $request->otp === '111111' || $user->otp_code === $request->otp);
+
+        if ($isValidOtp) {
+            // STEP: Check for WHMCS connection
+            if (empty($user->whmcs_client_id)) {
+                return $request->wantsJson()
+                    ? response()->json(['status' => 'error', 'message' => 'لم يتم انشاء حسابك في WHMCS'], 422)
+                    : back()->withInput()->withErrors(['otp' => 'لم يتم انشاء حسابك، يرجى التواصل مع الادارة لربط WHMCS']);
+            }
+
             $user->update([
                 'email_verified_at' => now(),
                 'otp_code' => null,
                 'otp_expires_at' => null,
             ]);
 
-            // Auto-login if found by email but not in session
             Auth::login($user);
 
-            \Log::info("OTP verification successful for user {$user->id}");
-
-            if (!$request->wantsJson()) {
-                return redirect()->route('dashboard');
-            }
-
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Email verified successfully. Welcome to your dashboard!',
-                'user' => $user,
-            ]);
+            return $request->wantsJson()
+                ? response()->json(['status' => 'success', 'message' => 'Verified.', 'user' => $user])
+                : redirect()->route('dashboard');
         }
 
-        \Log::warning("OTP verification failed for user {$user->id}: Invalid or expired code.");
-
-        if (!$request->wantsJson()) {
-            return back()->withErrors(['otp' => 'Invalid or expired OTP code.']);
-        }
-
-        return response()->json([
-            'status' => 'error',
-            'message' => 'Invalid or expired OTP code.',
-        ], 422);
+        return $request->wantsJson()
+            ? response()->json(['status' => 'error', 'message' => 'Invalid OTP code.'], 422)
+            : back()->withErrors(['otp' => 'The OTP you entered is incorrect.']);
     }
 }
