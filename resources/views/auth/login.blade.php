@@ -28,7 +28,7 @@
         @endif
 
         <div class="social-section">
-            <button class="social-btn">
+            <button type="button" id="google-signin-btn" class="social-btn">
                 <svg width="20" height="20" viewBox="0 0 48 48">
                     <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z" />
                     <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z" />
@@ -90,7 +90,67 @@ function togglePassword(inputId, btn) {
     } else {
         input.type = 'password';
         btn.textContent = 'Show';
-    }
 }
+</script>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+  import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBOa1Hh40dI0OujTDWPV5aHCqav9GwPmZs",
+    authDomain: "hosting-44cb1.firebaseapp.com",
+    projectId: "hosting-44cb1",
+    storageBucket: "hosting-44cb1.firebasestorage.app",
+    messagingSenderId: "809345555722",
+    appId: "1:809345555722:web:bb6600ab04078e1c0aeef3"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
+
+  document.getElementById('google-signin-btn').addEventListener('click', () => {
+      const btn = document.getElementById('google-signin-btn');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = 'Connecting...';
+      btn.style.opacity = '0.7';
+      btn.style.cursor = 'wait';
+
+      signInWithPopup(auth, provider)
+          .then((result) => {
+              return result.user.getIdToken();
+          })
+          .then((idToken) => {
+              return fetch('/api/auth/firebase/login', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json',
+                      'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                  },
+                  body: JSON.stringify({ id_token: idToken })
+              });
+          })
+          .then(res => res.json())
+          .then(data => {
+              if (data.success) {
+                  window.location.href = "{{ route('dashboard') }}";
+              } else {
+                  alert("Login failed: " + (data.message || 'Unknown error'));
+                  btn.innerHTML = originalText;
+                  btn.style.opacity = '1';
+                  btn.style.cursor = 'pointer';
+              }
+          })
+          .catch((error) => {
+              console.error("Firebase Error:", error);
+              if (error.code !== 'auth/popup-closed-by-user') {
+                  alert("Authentication failed: " + error.message);
+              }
+              btn.innerHTML = originalText;
+              btn.style.opacity = '1';
+              btn.style.cursor = 'pointer';
+          });
+  });
 </script>
 @endpush
